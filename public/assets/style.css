@@ -1,0 +1,296 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-family: "Inter";
+  font-size: 20px;
+}
+.header {
+  position: fixed;
+  width: 100%;
+  height: 120px;
+  left: 0px;
+  top: 0px;
+  z-index: 1000;
+  background: #74c5ff;
+}
+
+.header-logo img {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  left: 60px;
+  top: 10px;
+
+  background: url(./image/logo.png);
+  border-radius: 50px;
+}
+
+.header-name h2 {
+  position: absolute;
+  width: 470px;
+  height: 39px;
+  left: 186px;
+  top: 10px;
+
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 800;
+  font-size: 32px;
+  line-height: 39px;
+  /* identical to box height */
+
+  display: flex;
+  align-items: center;
+  letter-spacing: -0.017em;
+
+  color: #000000;
+}
+
+.header-nav a:first-child {
+  position: absolute;
+  width: 145px;
+  height: 24px;
+  left: 186px;
+  top: 60px;
+
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 24px;
+  display: flex;
+  align-items: center;
+  letter-spacing: -0.017em;
+
+  color: #fffa8d;
+}
+
+.header-nav a:nth-child(2) {
+  position: absolute;
+  width: 108px;
+  height: 24px;
+  left: 357px;
+  top: 60px;
+
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 24px;
+  display: flex;
+  align-items: center;
+  letter-spacing: -0.017em;
+
+  color: #fffa8d;
+}
+
+.header-nav a:nth-child(3) {
+  position: absolute;
+  width: 113px;
+  height: 24px;
+  left: 491px;
+  top: 60px;
+
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 24px;
+  display: flex;
+  align-items: center;
+  letter-spacing: -0.017em;
+
+  color: #fffa8d;
+}
+
+.header-nav a {
+  text-decoration: none;
+}
+
+.header-nav a:hover {
+  color: red;
+}
+
+.login-btn {
+  position: absolute;
+  width: 178px;
+  height: 50px;
+  left: 1014px;
+  top: 34px;
+
+  background: #d9d9d9;
+  border-radius: 15px;
+}
+
+.register-btn {
+  position: absolute;
+  width: 178px;
+  height: 50px;
+  left: 1218px;
+  top: 34px;
+
+  background: #d9d9d9;
+  border-radius: 15px;
+}
+
+#content {
+  margin-top: 120px;
+  min-height: calc(100vh - 240px);
+}
+
+.center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login {
+  width: 800px;
+  height: 500px;
+  padding: 30px 0;
+  margin-top: 150px;
+  margin-bottom: 30px;
+
+  background: #ffffff;
+  border: 1px solid #000000;
+  box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.footer {
+  width: 100%;
+  height: 120px;
+  background: #74c5ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+
+  border-right: 1px solid;
+}
+
+.login-info img {
+  width: 320px;
+  height: 320px;
+}
+
+.login-form {
+  padding: 0 60px !important;
+}
+
+.login-form h3 {
+  margin-top: 43px;
+}
+.login-form button {
+  margin-top: 43px;
+  width: 178px;
+  height: 50px;
+  border-radius: 15px;
+  box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.border-radius {
+  border-radius: 15px;
+}
+.box-shadow {
+  box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.announcement {
+  width: 1336px;
+  height: 160px;
+
+  border: 1px solid;
+  margin: 0 auto 45px;
+  border-radius: 15px;
+  
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.announcement:hover {
+  transform: translate(0, -8px);
+  box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.25);
+  z-index: 1;
+}
+
+li {
+  list-style-type: none;
+}
+
+.courses {
+  border: 1px solid;
+  border-radius: 15px;
+  
+  width: 300px;
+  height: 371px;
+  margin-bottom: 32px;
+  margin-right: 45px;
+}
+
+.course-img img {
+  width: 298px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 15px;
+}
+
+#listcourses {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.courses:hover {
+  transform: translate(0, -8px);
+  box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.25);
+  z-index: 1;
+}
+
+
+
+.course-name {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 26px;
+  height: 40px;
+  margin: 12px 12px;
+}
+
+.course-discription {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 17px;
+  height: 48px;
+  margin: 12px 12px;
+  overflow: hidden;
+}
+
+.course-btn  {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.course-btn button {
+  padding: 0 12px;
+  border-radius: 5px;
+  box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+a {
+  text-decoration: none;
+}
