@@ -40,5 +40,20 @@
     <div class="footer">
       <h5>Developed by Tran Minh Hoang</h5>
     </div>
+    <script>
+      const API_URL = "http://localhost:8000/api/";
+      const options = {
+        method: "GET",
+        mode: 'cors'
+      };
+
+      fetch(
+        API_URL,
+        options
+      )
+
+      .then((response) => response.json())
+      .then(res => renderCourses(res.data))
+    </script>
   </body>
 </html>

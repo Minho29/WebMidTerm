@@ -5,17 +5,21 @@ var db = require("./data.js");
 var md5 = require("md5");
 var cookieParser = require("cookie-parser");
 app.use(cookieParser());
-const path = require('path');
+const path = require("path");
 var bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(express.static(path.join(__dirname, '../public')));
+app.use(express.static(path.join(__dirname, "../public")));
 
 app.listen(HTTP_PORT, () => {
   console.log("Server running on port %PORT%".replace("%PORT%", HTTP_PORT));
 });
 
 app.get("/api/announcements", (_, res, next) => {
+  res.set({
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*",
+  });
   var sql = "select * from announcements";
   var params = [];
   db.all(sql, params, (err, rows) => {
@@ -31,6 +35,10 @@ app.get("/api/announcements", (_, res, next) => {
 });
 
 app.post("/api/register", (req, res, next) => {
+  res.set({
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*",
+  });
   var errors = [];
   let pass = req.body.password;
   if (pass === undefined) {
@@ -60,6 +68,10 @@ app.post("/api/register", (req, res, next) => {
 });
 
 app.post("/api/login", async (req, res, next) => {
+  res.set({
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*",
+  });
   var errors = [];
   let pass = req.body.password;
   let name = req.body.name;
@@ -87,9 +99,18 @@ app.post("/api/login", async (req, res, next) => {
   });
 });
 
-app.get("/api/all/courses", (_, res, next) => {
-  var sql = "select * from courses";
-  var params = [];
+app.get("/api/all/courses", (req, res, next) => {
+  res.set({
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*",
+  });
+  if (req.cookies.name) {
+    var sql =
+      "select * from courses where id not in (select id from myCourses where user_id = (select id from users where name = ?))";
+  } else {
+    var sql = "select * from courses";
+  }
+  var params = req.cookies.name;
   db.all(sql, params, (err, rows) => {
     if (err) {
       res.status(400).json({ error: err.message });
@@ -103,9 +124,12 @@ app.get("/api/all/courses", (_, res, next) => {
 });
 
 app.get("/api/my/courses", (req, res, next) => {
+  res.set({
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*",
+  });
   if (req.cookies.name) {
-    let sql =
-      "select * from courses where id in (select course_id from myCourses inner join users on myCourses.user_id = users.id where name = ?);";
+    let sql = "select * from courses where id in (select course_id from myCourses inner join users on myCourses.user_id = users.id where name = ?);";
     db.all(sql, [req.cookies.name], (err, rows) => {
       if (err) {
         res.status(400).json({ error: err.message });
@@ -116,11 +140,57 @@ app.get("/api/my/courses", (req, res, next) => {
       });
     });
   } else {
-    res.send("please login first!");
+    res.json({
+      messages: "please login first!",
+      data: [],
+    });
+  }
+});
+
+app.post("/api/my/courses", async (req, res, next) => {
+  res.set({
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*",
+  });
+  if (req.cookies.name) {
+    var sqlname = "SELECT * FROM users WHERE name = ? ";
+    db.all(sqlname, req.cookies.name, (err, result) => {
+      if (err) {
+        res.status(400).json({ error: err.message });
+        return;
+      }
+      let id = result[0]["id"];
+      let courseid = req.body.courseID;
+      var data = {
+        user_id: id,
+        courseid: courseid,
+        status: "Learning"
+      };
+      var sql =
+        "INSERT INTO myCourses (user_id,course_id,status) VALUES (?,?,?)";
+      var params = [data.user_id, data.courseid, data.status];
+      db.run(sql, params, function (err, result) {
+        if (err) {
+          res.status(400).json({ error: err.message });
+          return;
+        }
+        res.json({
+          message: "success",
+          data: data,
+          id: this.lastID,
+        });
+      });
+    });
+  } else {
+    res.send("please login first");
   }
 });
 
 app.get("/api/course/:courseid/quizes", (req, res, next) => {
+  res.set({
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*",
+  });
   if (req.cookies.name) {
     let courseId = req.params.courseid;
     let sql = "select * from quizes where course_id = ?;";
@@ -144,6 +214,10 @@ app.get("/api/course/:courseid/quizes", (req, res, next) => {
 });
 
 app.get("/api/course/:courseid/doquiz/:quizid", (req, res, next) => {
+  res.set({
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*",
+  });
   if (req.cookies.name) {
     let quizId = req.params.quizid;
     let sql = "select * from questions where quiz_id = ?";
@@ -163,6 +237,10 @@ app.get("/api/course/:courseid/doquiz/:quizid", (req, res, next) => {
 });
 
 app.post("/api/course/:courseid/doquiz/:quizid", (req, res, next) => {
+  res.set({
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*",
+  });
   if (req.cookies.name) {
     let data = req.body;
     let sql = "SELECT * FROM questions";
@@ -190,6 +268,8 @@ app.post("/api/course/:courseid/doquiz/:quizid", (req, res, next) => {
     res.send("please login first!");
   }
 });
+
+
 
 app.use(function (req, res) {
   res.status(404);

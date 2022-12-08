@@ -46,70 +46,28 @@
     </div>
 
     <script>
-      const announcements = [
-        {
-          id: 1,
-          quiz: "The mid-term test",
-          course: "Data structures and Algorithms",
-          TimeStart: "08:00:00 1/12/2022",
-          TimeDo: "45 minutes",
-          Status: "Unfinished",
-        },
-        {
-          id: 2,
-          quiz: "The mid-term test",
-          course: "C++ Object Oriented Programming",
-          TimeStart: "10:00:00 1/12/2022",
-          TimeDo: "45 minutes",
-          Status: "Unfinished",
-        },
-        {
-          id: 3,
-          quiz: "The mid-term test",
-          course: "Database management system",
-          TimeStart: "08:00:00 25/11/2022",
-          TimeDo: "45 minutes",
-          Status: "Done",
-        },
-        {
-          id: 4,
-          quiz: "The mid-term test",
-          course: "Java Basic",
-          TimeStart: "08:00:00 15/01/2022",
-          TimeDo: "45 minutes",
-          Status: "Done",
-        },
-      ];
+      const API_URL = "http://localhost:8000/api/announcements";
+      const options = {
+        method: "GET",
+        mode: 'cors'
+      };
+
+      var data = fetch(API_URL, options)
+      .then((response) => response.json())
+      .then(res => renderAnnouncements(res.data))
+
 
       function renderAnnouncements(announcement) {
         const list = document.getElementById("content");
         function makeElem(announcementItem, announcementIndex) {
-          const { quiz, course, TimeStart, TimeDo, Status } = announcementItem;
+          const {id , content } = announcementItem;
           let li = document.createElement("li");
           li.innerHTML = `<div class="announcement">
       <div class="row">
         <div class="col-1"></div>
-        <div class="col-3">
-          <h5>Quiz: ${quiz}</h5>
+        <div class="col-10">
+          <h5>${content}</h5>
         </div>
-        <div class="col-3">
-          <h5>TimeStart: ${TimeStart}</h5>
-        </div>
-        <div class="col-3">
-          <h5>TimeDo: ${TimeDo}</h5>
-        </div>
-        <div class="col-2"></div>
-      </div>
-      <div class="row">
-        <div class="col-1"></div>
-        <div class="col-3">
-          <h5>Course: ${course}</h5>
-        </div>
-        <div class="col-3">
-          <h5 style="color: red">Status: ${Status}</h5>
-        </div>
-        <div class="col-3"></div>
-        <div class="col-2"></div>
       </div>
     </div>`;
           return li;
@@ -117,7 +75,7 @@
         const listContainer = document.createElement("ul");
         // Incase you don't know this, read about it. Helps from performance point of view for large DOM updates.
         const listFragment = document.createDocumentFragment();
-        announcements.forEach((item, index) => {
+        announcement.forEach((item, index) => {
           try {
             const listElement = makeElem(item, index);
             listFragment.append(listElement);
@@ -129,7 +87,6 @@
         list.append(listContainer);
       }
 
-      renderAnnouncements(announcements);
     </script>
   </body>
 </html>

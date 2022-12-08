@@ -1,121 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="./assets/style.css" />
-    <!-- CSS only -->
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
-      crossorigin="anonymous"
-    />
-    <title>Learning Management System</title>
-  </head>
-  <body>
-    <div class="header">
-      <div class="header-logo">
-        <img src="./assets/image/logo.png" alt="logo" />
-      </div>
 
-      <div class="header-name">
-        <h2>Learning Management System</h2>
-      </div>
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="./assets/style.css" />
+  <!-- CSS only -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous" />
+  <title>Learning Management System</title>
+</head>
 
-      <div class="header-nav">
-        <a href="./index.html">Announcement</a>
-        <a href="./allcourse.html">All courses</a>
-        <a href="./mycourse.html">My Courses</a>
-      </div>
-      <div class="header-btn">
-        <a href="./login.html"><button class="login-btn">Login</button></a>
-        <a href="./register.html"><button class="register-btn">Register</button></a>
-      </div>
+<body>
+  <div class="header">
+    <div class="header-logo">
+      <img src="./assets/image/logo.png" alt="logo" />
     </div>
 
-    <div id="content" style="margin-left: 60px;">
-      <h2>My Courses:</h2>
+    <div class="header-name">
+      <h2>Learning Management System</h2>
     </div>
 
-    <div class="footer">
-      <h5>Developed by Tran Minh Hoang</h5>
+    <div class="header-nav">
+      <a href="./index.html">Announcement</a>
+      <a href="./allcourse.html">All courses</a>
+      <a href="./mycourse.html">My Courses</a>
     </div>
-    <script>
-      const courses = [
-        {
-          id: 1,
-          name: "Data structures and Algorithms",
-          img_url: "./assets/image/ctdlvgt.jpg",
-          discription:
-            "This course will help you understand algorithms as well as understand the nature of data structures - a condition to become a good programmer.",
-          status: "Learning",
-        },
-        {
-          id: 2,
-          name: "Java Basic",
-          img_url: "./assets/image/javabasic.jpg",
-          discription:
-            "Basic Java programming course for beginners, this course will be the foundation for an advanced Java course to progress to Java Web or Android programming, ...",
-          status: "Done",
-        },
-        {
-          id: 3,
-          name: "Python Basic",
-          img_url: "./assets/image/ctdlvgt.jpg",
-          discription:
-            "Basic Python programming course with easy-to-understand exercises and theory, you can confidently move on to more advanced Python topics.",
-          status: "Not Started",
-        },
-        {
-          id: 4,
-          name: "Basic Algorithm",
-          img_url: "./assets/image/algorithmsbasic.jpg",
-          discription:
-            "With the basic algorithm course, you will learn how to think and solve basic programming problems that a programmer needs.",
-          status: "Done",
-        },
-        {
-          id: 5,
-          name: "Database management system",
-          img_url: "./assets/image/sql.jpg",
-          discription:
-            "This course will help you understand algorithms as well as understand the nature of data structures - a condition to become a good programmer.",
-          status: "Learning",
-        },
-        {
-          id: 6,
-          name: "Cloud computing",
-          img_url: "./assets/image/ctdlvgt.jpg",
-          discription:
-            "The course will provide a basic overview and overview of the field of cloud computing and prominent cloud computing technologies.",
-          status: "Not Started",
-        },
-        {
-          id: 7,
-          name: "Computer hardware",
-          img_url: "./assets/image/ctdlvgt.jpg",
-          discription:
-            "This course focuses on providing general knowledge of computer components that you can apply to the selection and use of computers.",
-          status: "Learning",
-        },
-        {
-          id: 8,
-          name: "C++ Advanced",
-          img_url: "./assets/image/ctdlvgt.jpg",
-          discription:
-            "This course will help you understand algorithms as well as understand the nature of data structures - a condition to become a good programmer.",
-          status: "Not Started",
-        },
-      ];
+    <div class="header-btn">
+      <a href="./login.html"><button class="login-btn">Login</button></a>
+      <a href="./register.html"><button class="register-btn">Register</button></a>
+    </div>
+  </div>
 
-      function renderCourses(courses) {
-        const list = document.getElementById("content");
-        function makeElem(coursesItem, coursesIndex) {
-          const { name, img_url, discription, status } = coursesItem;
-          let li = document.createElement("li");
-          li.innerHTML = `<div class="courses">
+  <div id="content" style="margin-left: 60px;">
+    <h2>My Courses:</h2>
+  </div>
+
+  <div class="footer">
+    <h5>Developed by Tran Minh Hoang</h5>
+  </div>
+  <script>
+    const API_URL = "http://localhost:8000/api/my/courses";
+    const options = {
+      method: "GET",
+      mode: 'cors'
+    };
+
+    fetch(
+      API_URL,
+      options
+    )
+      .then((response) => response.json())
+      .then(res => { 
+        if (res.messages === "success") { 
+          renderCourses(res.data) } 
+        else {
+          rendererrors(res.messages)
+        }
+      })
+    function rendererrors(error) {
+      const renderError = document.getElementById("content");
+      renderError.innerHTML = `<h3 class = "center">${error}</h3>`;
+    }
+
+
+    function renderCourses(courses) {
+      const list = document.getElementById("content");
+      function makeElem(coursesItem, coursesIndex) {
+        const { id, name, img_url, discription, status } = coursesItem;
+        let li = document.createElement("li");
+        li.innerHTML = `<div class="courses">
         <div class="course-img">
           <img src="${img_url}" alt="img">
         </div>
@@ -128,28 +83,29 @@
           </p>
         </div>
         <div class="course-btn">
-          <button style="background-color: #FF7474;">Learn Now</button>
+          <a href="./coursepage.html?course=${id}" class=" btn" style="border: 1px solid; padding: 4px 8px; background-color: #FF7474 ">Learn now</a>
+          //<button style="background-color: #FF7474;">Learn Now</button>
         </div>
       </div>`;
-          return li;
-        }
-        const listContainer = document.createElement("ul");
-        listContainer.setAttribute("id", "listcourses");
-        // Incase you don't know this, read about it. Helps from performance point of view for large DOM updates.
-        const listFragment = document.createDocumentFragment();
-        courses.forEach((item, index) => {
-          try {
-            const listElement = makeElem(item, index);
-            listFragment.append(listElement);
-          } catch (Error) {
-            console.log(Error);
-          }
-        });
-        listContainer.append(listFragment);
-        list.append(listContainer);
+        return li;
       }
+      const listContainer = document.createElement("ul");
+      listContainer.setAttribute("id", "listcourses");
+      // Incase you don't know this, read about it. Helps from performance point of view for large DOM updates.
+      const listFragment = document.createDocumentFragment();
+      courses.forEach((item, index) => {
+        try {
+          const listElement = makeElem(item, index);
+          listFragment.append(listElement);
+        } catch (Error) {
+          console.log(Error);
+        }
+      });
+      listContainer.append(listFragment);
+      list.append(listContainer);
+    }
 
-      renderCourses(courses.filter(course => course.status !== "Not Started"));
-    </script>
-  </body>
+  </script>
+</body>
+
 </html>

@@ -16,5 +16,9 @@
     "express": "^4.18.2",
     "md5": "^2.3.0",
     "sqlite3": "^5.1.2"
-  }
+  },
+  "devDependencies": {
+    "electron-rebuild": "^3.2.9"
+  },
+  "rebuild": "electron-rebuild -f -w sqlite3"
 }

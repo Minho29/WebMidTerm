@@ -1,1 +1,2 @@
-select * from questions where answer_id = 1 and id = 1;
+SELECT * FROM users WHERE name = "user1" 
+DELETE FROM myCourses WHERE id = 3
