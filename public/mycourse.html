@@ -72,26 +72,25 @@
           const { id, name, img_url, discription, status } = coursesItem;
           let li = document.createElement("li");
           li.innerHTML = `<div class="courses">
-        <div class="course-img">
-          <img src="${img_url}" alt="img">
-        </div>
-        <div class="course-text">
-          <h3 class="course-name">
-            ${name}
-          </h3>
-          <p class="course-discription">
-            ${discription}
-          </p>
-        </div>
-        <div class="course-btn">
-          <a href="./coursepage.html?course=${id}" class=" btn" style="border: 1px solid; padding: 4px 8px; background-color: #FF7474 ">Learn now</a>
-        </div>
-      </div>`;
+                            <div class="course-img">
+                              <img src="${img_url}" alt="img">
+                            </div>
+                            <div class="course-text">
+                              <h3 class="course-name">
+                                ${name}
+                              </h3>
+                              <p class="course-discription">
+                                ${discription}
+                              </p>
+                            </div>
+                            <div class="course-btn">
+                              <a href="./coursepage.html?course=${id}" class=" btn" style="border: 1px solid; padding: 4px 8px; background-color: #FF7474 ">Learn now</a>
+                            </div>
+                          </div>`;
           return li;
         }
         const listContainer = document.createElement("ul");
         listContainer.setAttribute("id", "listcourses");
-        // Incase you don't know this, read about it. Helps from performance point of view for large DOM updates.
         const listFragment = document.createDocumentFragment();
         courses.forEach((item, index) => {
           try {

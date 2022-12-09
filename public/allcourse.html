@@ -63,21 +63,21 @@
           const { name, img_url, discription, status } = coursesItem;
           let li = document.createElement("li");
           li.innerHTML = `<div class="courses">
-        <div class="course-img">
-          <img src="${img_url}" alt="img">
-        </div>
-        <div class="course-text">
-          <h3 class="course-name">
-            ${name}
-          </h3>
-          <p class="course-discription">
-            ${discription}
-          </p>
-        </div>
-        <div class="course-btn">
-          <button style="background-color: #FF7474;">Join</button>
-        </div>
-      </div>`;
+                            <div class="course-img">
+                              <img src="${img_url}" alt="img">
+                            </div>
+                            <div class="course-text">
+                              <h3 class="course-name">
+                                ${name}
+                              </h3>
+                              <p class="course-discription">
+                                ${discription}
+                              </p>
+                            </div>
+                            <div class="course-btn">
+                              <button style="background-color: #FF7474;">Join</button>
+                            </div>
+                          </div>`;
           return li;
         }
         const listContainer = document.createElement("ul");
