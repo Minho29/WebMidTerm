@@ -65,11 +65,7 @@ app.post("/api/register", (req, res, next) => {
       res.status(400).json({ error: err.message });
       return;
     }
-    res.json({
-      message: "success",
-      data: data,
-      id: this.lastID,
-    });
+    res.send(true)
   });
 });
 

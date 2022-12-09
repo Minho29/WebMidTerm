@@ -1,6 +1,6 @@
 create table users (
     id integer primary key AUTOINCREMENT,
-    name text,
+    name text UNIQUE,
     pass text
 );
 INSERT INTO users (id, name, pass)
