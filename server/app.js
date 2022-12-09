@@ -1,14 +1,24 @@
-var HTTP_PORT = 8000;
+var HTTP_PORT = 5500;
 var express = require("express");
 var app = express();
 var db = require("./data.js");
 var md5 = require("md5");
 var cookieParser = require("cookie-parser");
 app.use(cookieParser());
+const cors = require("cors");
+app.use(
+  cors({
+    origin: "*",
+  })
+);
+app.use(express.json());
+const multer = require("multer");
+app.use(multer().none());
 const path = require("path");
 var bodyParser = require("body-parser");
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+
 app.use(express.static(path.join(__dirname, "../public")));
 
 app.listen(HTTP_PORT, () => {
@@ -16,10 +26,6 @@ app.listen(HTTP_PORT, () => {
 });
 
 app.get("/api/announcements", (_, res, next) => {
-  res.set({
-    "Content-Type": "application/json",
-    "Access-Control-Allow-Origin": "*",
-  });
   var sql = "select * from announcements";
   var params = [];
   db.all(sql, params, (err, rows) => {
@@ -67,42 +73,33 @@ app.post("/api/register", (req, res, next) => {
   });
 });
 
-app.post("/api/login", async (req, res, next) => {
-  res.set({
-    "Content-Type": "application/json",
-    "Access-Control-Allow-Origin": "*",
-  });
-  var errors = [];
-  let pass = req.body.password;
+app.post("/api/login", async function (req, res) {
+  res.type("text");
   let name = req.body.name;
-  if (pass === undefined || name === undefined) {
-    errors.push("Name and password must be required");
+  let password = req.body.password;
+  if (name === undefined || password === undefined) {
+    res.status(400).send("Missing required paramaters name or password.");
+  } else {
+    let sql = `SELECT * FROM users WHERE name = '${name}' AND pass = '${password}';`;
+    db.all(sql, (err, rows) => {
+      if (err) {
+        res.status(400).json({ error: err.message });
+        return;
+      }
+      if (rows.length === 0) {
+        res.send("Incorect Name or Password!");
+        return;
+      }
+      let name = rows[0]["name"];
+      res.cookie("name", name, { expires: new Date(Date.now() + 900000) });
+      res.send(true);
+    });
   }
-  if (errors.length) {
-    res.status(400).json({ error: errors.join(",") });
-    return;
-  }
-  var sql = "SELECT name FROM users WHERE name = ? AND pass = ?;";
-  var params = [name, pass];
-  db.all(sql, params, (err, rows) => {
-    if (err) {
-      res.status(400).json({ error: err.message });
-      return;
-    }
-    if (rows.length === 0) {
-      res.send("Incorect Name or Password!");
-      return;
-    }
-    let name = rows[0]["name"];
-    res.cookie("name", name, { expires: new Date(Date.now() + 900000) });
-    res.send(true);
-  });
 });
 
 app.get("/api/all/courses", (req, res, next) => {
   res.set({
     "Content-Type": "application/json",
-    "Access-Control-Allow-Origin": "*",
   });
   if (req.cookies.name) {
     var sql =
@@ -129,7 +126,8 @@ app.get("/api/my/courses", (req, res, next) => {
     "Access-Control-Allow-Origin": "*",
   });
   if (req.cookies.name) {
-    let sql = "select * from courses where id in (select course_id from myCourses inner join users on myCourses.user_id = users.id where name = ?);";
+    let sql =
+      "select * from courses where id in (select course_id from myCourses inner join users on myCourses.user_id = users.id where name = ?);";
     db.all(sql, [req.cookies.name], (err, rows) => {
       if (err) {
         res.status(400).json({ error: err.message });
@@ -164,7 +162,7 @@ app.post("/api/my/courses", async (req, res, next) => {
       var data = {
         user_id: id,
         courseid: courseid,
-        status: "Learning"
+        status: "Learning",
       };
       var sql =
         "INSERT INTO myCourses (user_id,course_id,status) VALUES (?,?,?)";
@@ -268,8 +266,6 @@ app.post("/api/course/:courseid/doquiz/:quizid", (req, res, next) => {
     res.send("please login first!");
   }
 });
-
-
 
 app.use(function (req, res) {
   res.status(404);
