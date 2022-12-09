@@ -47,16 +47,14 @@
             <h2>Now!</h2>
           </div>
           <div class="login-form col-6">
-            <!-- <form action="" id="register"> -->
+            <form id="register">
               <h3>Account</h3>
-              <input type="text" class="form-control" />
+              <input type="text" class="form-control" id="name"/>
               <h3>Password</h3>
-              <input type="password" class="form-control" />
+              <input type="password" class="form-control" id="password"/>
               <a href="./login.html">Back to login!</a>
-              <a href="./index.html">
-                <button>Register</button>
-              </a>
-            <!-- </form> -->
+              <button>Register</button>
+            </form>
           </div>
         </div>
       </div>
@@ -65,5 +63,40 @@
     <div class="footer">
       <h5>Developed by Tran Minh Hoang</h5>
     </div>
+
+    <script>
+      (function () {
+        const API_URL = "./api/register";
+
+        window.addEventListener("load", init);
+
+        function init() {
+          id("login").addEventListener("submit", function (e) {
+            e.preventDefault();
+            let username = id("name").value;
+            let password = id("password").value;
+            let formBody = new FormData();
+            form.append("name", username);
+            form.append("password", password);
+            fetch(API_URL, {
+              method: "POST",
+              body: form,
+            })
+              .then((res) => res.text())
+              .then((res) => {
+                if (result === "true") {
+                  window.location.href = "mycourse.html";
+                } else {
+                  alert("username or password is incorrect");
+                  window.location.href = "login.html";
+                }
+              })
+              .catch(console.log);
+          });
+        }
+      })();
+    </script>
+
+
   </body>
 </html>
