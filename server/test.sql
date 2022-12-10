@@ -1,2 +1,6 @@
-SELECT * FROM users WHERE name = "user1" 
-DELETE FROM myCourses WHERE id = 3
+SELECT * FROM users
+
+select * from myCourses;
+
+DELETE FROM myCourses
+WHERE id = 4;

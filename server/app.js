@@ -56,7 +56,7 @@ app.post("/api/register", (req, res, next) => {
   }
   var data = {
     name: req.body.name,
-    password: md5(req.body.password),
+    password:req.body.password,
   };
   var sql = "INSERT INTO users (name, pass) VALUES (?,?)";
   var params = [data.name, data.password];
@@ -99,7 +99,7 @@ app.get("/api/all/courses", (req, res, next) => {
   });
   if (req.cookies.name) {
     var sql =
-      "select * from courses where id not in (select id from myCourses where user_id = (select id from users where name = ?))";
+      "select * from courses where id not in (select course_id from myCourses where user_id = (select id from users where name = ?))";
   } else {
     var sql = "select * from courses";
   }
@@ -142,10 +142,6 @@ app.get("/api/my/courses", (req, res, next) => {
 });
 
 app.post("/api/my/courses", async (req, res, next) => {
-  res.set({
-    "Content-Type": "application/json",
-    "Access-Control-Allow-Origin": "*",
-  });
   if (req.cookies.name) {
     var sqlname = "SELECT * FROM users WHERE name = ? ";
     db.all(sqlname, req.cookies.name, (err, result) => {
@@ -170,13 +166,11 @@ app.post("/api/my/courses", async (req, res, next) => {
         }
         res.json({
           message: "success",
-          data: data,
-          id: this.lastID,
-        });
+        })
       });
     });
   } else {
-    res.send("please login first");
+    res.status(400).json({ error: "Please login first!" });
   }
 });
 

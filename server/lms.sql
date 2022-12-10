@@ -181,13 +181,13 @@ divide, multiply, add, subtract', 6, 105),
 (40, 'Which of the below is valid way to instantiate an array in java?', 8, 157);
 
 CREATE TABLE Question_answer (
+    id integer primary key  AUTOINCREMENT,
 	questionID	INTEGER,
 	answerID	INTEGER,
-	PRIMARY KEY(answerID AUTOINCREMENT),
 	FOREIGN KEY(answerID) REFERENCES answers(id),
 	FOREIGN KEY(questionID) REFERENCES questions(id)
 );
-INSERT INTO Question_answer 
+INSERT INTO Question_answer(questionID, answerID)
 VALUES
 (1,1),(1,2),(1,3),(1,4),
 (2,5),(2,6),(2,7),(2,8),
