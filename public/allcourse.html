@@ -30,11 +30,13 @@
       </div>
       <div class="header-btn">
         <a href="./login.html"><button class="login-btn">Login</button></a>
-        <a href="./register.html"><button class="register-btn">Register</button></a>
+        <a href="./register.html"
+          ><button class="register-btn">Register</button></a
+        >
       </div>
     </div>
 
-    <div id="content" style="margin-left: 60px;">
+    <div id="content" style="margin-left: 60px">
       <h2>All Courses:</h2>
     </div>
 
@@ -42,25 +44,22 @@
       <h5>Developed by Tran Minh Hoang</h5>
     </div>
     <script>
-      const API_URL = "./api/all/courses";
-      const options = {
-        method: "GET",
-        mode: 'cors'
-      };
+      window.addEventListener("load", init);
 
-      fetch(
-        API_URL,
-        options
-      )
-        .then((response) => response.json())
-        .then(res => renderCourses(res.data))
-        
-        
+      function init() {
+        const API_URL = "./api/all/courses";
+        fetch(API_URL)
+          .then((response) => response.json())
+          .then((res) => {
+            renderCourses(res.data);
+          });
+      }
 
       function renderCourses(courses) {
         const list = document.getElementById("content");
         function makeElem(coursesItem, coursesIndex) {
-          const { name, img_url, discription, status } = coursesItem;
+          const { id, name, img_url, discription } = coursesItem;
+          console.log(coursesItem);
           let li = document.createElement("li");
           li.innerHTML = `<div class="courses">
                             <div class="course-img">
@@ -75,7 +74,11 @@
                               </p>
                             </div>
                             <div class="course-btn">
-                              <button style="background-color: #FF7474;">Join</button>
+                              <button
+                              class="btn"
+                              style="border: 1px solid; padding: 4px 8px; background-color: #FF7474; width: 100px"
+                              id="${id}"
+                              >Join</button>
                             </div>
                           </div>`;
           return li;
@@ -94,6 +97,31 @@
         });
         listContainer.append(listFragment);
         list.append(listContainer);
+        courses.forEach(item => {
+          e = document.getElementById(`${item.id}`)
+          e.id = item.id
+          e.addEventListener('click', handleClick)
+        })
+      }
+      function handleClick(e) {
+        const API_URL = "./api/my/courses";
+        var formBody = new FormData();
+        formBody.append("courseID", e.target.id);
+        fetch(API_URL, {
+          method: "POST",
+          body: formBody,
+        })
+          .then((res) => res.json())
+          .then((res) => {
+            console.log(res);
+            if (res.message === "success") {
+              alert("success!");
+              window.location.href = "mycourse.html"
+            } else {
+              alert("Something went wrong!");
+              window.location.href = "mycourse.html"
+            }
+          });
       }
     </script>
   </body>
