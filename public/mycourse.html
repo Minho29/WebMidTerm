@@ -46,19 +46,13 @@
       <h5>Developed by Tran Minh Hoang</h5>
     </div>
     <script>
-      const API_URL = "./api/my/courses";
-      const options = {
-        method: "GET",
-        mode: "cors",
-      };
-
-      fetch(API_URL, options)
+      fetch("./api/my/courses")
         .then((response) => response.json())
         .then((res) => {
           if (res.messages === "success") {
             renderCourses(res.data);
           } else {
-            rendererrors(res.messages);
+            console.log(res.message);
           }
         });
       function rendererrors(error) {

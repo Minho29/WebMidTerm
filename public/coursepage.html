@@ -31,29 +31,110 @@
       </div>
       <div class="header-btn">
         <a href="./login.html"><button class="login-btn">Login</button></a>
-        <a href="./register.html"><button class="register-btn">Register</button></a>
+        <a href="./register.html"
+          ><button class="register-btn">Register</button></a
+        >
       </div>
     </div>
-
-    <div id="content"></div>
+    <div id="content" style="margin-left: 60px">
+      <h2>Course:</h2>
+      <div id="course"></div>
+      <h2>Quiz:</h2>
+    </div>
 
     <div class="footer">
       <h5>Developed by Tran Minh Hoang</h5>
     </div>
     <script>
-      const API_URL = "";
-      const options = {
-        method: "GET",
-        mode: 'cors'
-      };
+      const params = new URLSearchParams(window.location.search);
+      let value = params.get("course");
 
-      fetch(
-        API_URL,
-        options
-      )
+      fetch("./api/my/courses")
+        .then((response) => response.json())
+        .then((res) => {
+          if (res.messages === "success") {
+            console.log(res.data.filter((item) => item.id == value));
+            renderCourses(res.data.filter((item) => item.id == value));
+          } else {
+            console.log(res.message);
+          }
+        });
+      function renderCourses(courses) {
+        const list = document.getElementById("course");
+        function makeElem(coursesItem, coursesIndex) {
+          const { id, name, img_url, discription } = coursesItem;
+          let li = document.createElement("li");
+          li.innerHTML = `<div class="container">
+                            <div class="row" style="border: 1px solid; border-radius: 15px">
+                              <div class="col-3">
+                                <img src="${img_url}" alt="img" style="width: 300px; object-fit: cover;" />
+                              </div>
+                              <div class="col-7">
+                                <div class="container "  style="padding-top: 12px;">
+                                  <h4>${name}</h4>
+                                  <p>${discription}</p>
+                                </div>
+                              </div>
+                              <div class="col-2" style="display: none">
+                              </div>
+                            </div>
+                          </div>`;
+          return li;
+        }
+        const listContainer = document.createElement("ul");
+        listContainer.setAttribute("id", "listcourses");
+        const listFragment = document.createDocumentFragment();
+        courses.forEach((item, index) => {
+          try {
+            const listElement = makeElem(item, index);
+            listFragment.append(listElement);
+          } catch (Error) {
+            console.log(Error);
+          }
+        });
+        listContainer.append(listFragment);
+        list.append(listContainer);
+      }
+      fetch(`/api/course/${value}/quizes`)
+        .then((response) => response.json())
+        .then((res) => renderQuiz(res.data));
 
-      .then((response) => response.json())
-      .then(res => renderCourses(res.data))
+      function renderQuiz(quizes) {
+        const list = document.getElementById("content");
+        function makeElem(quizesItem, quizesIndex) {
+          const { id, course_id, name } = quizesItem;
+          let li = document.createElement("li");
+          li.innerHTML = `<div class="container">
+                            <div class="row">
+                              <a href="./doquiz.html?quiz=${id}">
+                                <div class="quiz-btn">
+                                  ${name}
+                                </div>
+                              </a>
+                            </div>
+                          </div>`;
+          return li;
+        }
+        const listContainer = document.createElement("ul");
+        listContainer.setAttribute("id", "listcourses");
+
+        const listFragment = document.createDocumentFragment();
+        quizes.forEach((item, index) => {
+          try {
+            const listElement = makeElem(item, index);
+            listFragment.append(listElement);
+          } catch (Error) {
+            console.log(Error);
+          }
+        });
+        listContainer.append(listFragment);
+        list.append(listContainer);
+        // quizes.forEach((item) => {
+        //   e = document.getElementById(`${item.id}`);
+        //   e.id = item.id;
+        //   e.addEventListener("click", handleClick);
+        // });
+      }
     </script>
   </body>
 </html>

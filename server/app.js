@@ -117,10 +117,6 @@ app.get("/api/all/courses", (req, res, next) => {
 });
 
 app.get("/api/my/courses", (req, res, next) => {
-  res.set({
-    "Content-Type": "application/json",
-    "Access-Control-Allow-Origin": "*",
-  });
   if (req.cookies.name) {
     let sql =
       "select * from courses where id in (select course_id from myCourses inner join users on myCourses.user_id = users.id where name = ?);";
