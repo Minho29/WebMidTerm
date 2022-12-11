@@ -28,7 +28,7 @@
         <a href="./allcourse.html">All courses</a>
         <a href="./mycourse.html">My Courses</a>
       </div>
-      <div class="header-btn">
+      <div class="header-btn" id="login">
         <a href="./login.html"><button class="login-btn">Login</button></a>
         <a href="./register.html"
           ><button class="register-btn">Register</button></a
@@ -45,6 +45,31 @@
     </div>
     <script>
       window.addEventListener("load", init);
+
+      var getCookies = function () {
+        var pairs = document.cookie.split(";");
+        var cookies = {};
+        for (var i = 0; i < pairs.length; i++) {
+          var pair = pairs[i].split("=");
+          cookies[(pair[0] + "").trim()] = unescape(pair.slice(1).join("="));
+        }
+        return cookies;
+      };
+
+      let name = getCookies().name;
+
+      if (!name) {
+        document.getElementById("login").innerHTML = `
+        <a href="./login.html"><button class="login-btn">Login</button></a>
+        <a href="./register.html"
+          ><button class="register-btn">Register</button></a
+        >
+        `;
+      } else {
+        document.getElementById("login").innerHTML = `
+        <button class="login-btn" id="logout">Hello, ${name}</button>
+        `;
+      }
 
       function init() {
         const API_URL = "./api/all/courses";
@@ -96,11 +121,11 @@
         });
         listContainer.append(listFragment);
         list.append(listContainer);
-        courses.forEach(item => {
-          e = document.getElementById(`${item.id}`)
-          e.id = item.id
-          e.addEventListener('click', handleClick)
-        })
+        courses.forEach((item) => {
+          e = document.getElementById(`${item.id}`);
+          e.id = item.id;
+          e.addEventListener("click", handleClick);
+        });
       }
       function handleClick(e) {
         const API_URL = "./api/my/courses";
@@ -115,13 +140,25 @@
             console.log(res);
             if (res.message === "success") {
               alert("success!");
-              window.location.href = "mycourse.html"
+              window.location.href = "mycourse.html";
             } else {
               alert("Something went wrong!");
-              window.location.href = "mycourse.html"
+              window.location.href = "mycourse.html";
             }
           });
       }
+      document.getElementById("logout").addEventListener("click", deleteAllCookies)
+        function deleteAllCookies() {
+          var cookies = document.cookie.split(";");
+
+          for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i];
+            var eqPos = cookie.indexOf("=");
+            var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+            document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+            window.location.href = "login.html";
+          }
+        }
     </script>
   </body>
 </html>

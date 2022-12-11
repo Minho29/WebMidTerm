@@ -227,7 +227,15 @@ app.get("/api/course/:courseid/doquiz/:quizid", (req, res, next) => {
 
 app.post("/api/course/:courseid/doquiz/:quizid", (req, res, next) => {
   if (req.cookies.name) {
-    let data = req.body;
+    let answer = req.body.answer;
+    let data = ""
+    let length = answer.length;
+    for (let i = 0; i < length; i++) {
+      console.log(answer[i]);
+      data += answer[i]
+    }
+    data = JSON.parse(data)
+    length = data.length
     let sql = "SELECT * FROM questions";
     db.all(sql, (err, rows) => {
       if (err) {
@@ -235,10 +243,11 @@ app.post("/api/course/:courseid/doquiz/:quizid", (req, res, next) => {
         return;
       }
       let score = 0;
+      console.log(data[0]);
       for (let i = 0; i < rows.length; i++) {
         for (let j = 0; j < data.length; j++) {
-          if (rows[i]["id"] == data[j]["question_id"]) {
-            if (rows[i]["answer_id"] == data[j]["answer_id"]) {
+          if (rows[i]["id"] == Object.values(data[j])[0]) {
+            if (rows[i]["answer_id"] == Object.values(data[j])[1]) {
               score++;
             }
           }
@@ -246,7 +255,7 @@ app.post("/api/course/:courseid/doquiz/:quizid", (req, res, next) => {
       }
       res.json({
         message: "success",
-        data: score,
+        data: [score, length],
       });
     });
   } else {

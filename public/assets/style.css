@@ -314,3 +314,37 @@ a {
 .question {
   display: block !important;
 }
+
+#submitAns {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+#submitAns button {
+  padding: 8px 36px;
+  margin: 12px 0;
+  border-radius: 15px;
+  background-color: #FF7474;
+}
+
+#submitAns button:hover {
+  transform: translate(0, -8px);
+  box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.25);
+  z-index: 1;
+}
+#doagain {
+  text-decoration: none;
+  border: 1px solid;
+  border-radius: 15px;
+  padding: 8px 36px;
+  margin: 12px 0;
+  background-color: #FF7474;
+}
+
+#doagain:hover {
+  transform: translate(0, -8px);
+  box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.25);
+  z-index: 1;
+}

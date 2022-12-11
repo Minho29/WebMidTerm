@@ -29,16 +29,11 @@
         <a href="./allcourse.html">All courses</a>
         <a href="./mycourse.html">My Courses</a>
       </div>
-      <div class="header-btn">
-        <a href="./login.html"><button class="login-btn">Login</button></a>
-        <a href="./register.html"
-          ><button class="register-btn">Register</button></a
-        >
-      </div>
+      <div class="header-btn" id="login"></div>
     </div>
 
-    <div id="content" style="margin-left: 60px;">
-        <h2>Announcements:</h2>
+    <div id="content" style="margin-left: 60px">
+      <h2>Announcements:</h2>
     </div>
 
     <div class="footer">
@@ -46,6 +41,29 @@
     </div>
 
     <script>
+      var getCookies = function () {
+        var pairs = document.cookie.split(";");
+        var cookies = {};
+        for (var i = 0; i < pairs.length; i++) {
+          var pair = pairs[i].split("=");
+          cookies[(pair[0] + "").trim()] = unescape(pair.slice(1).join("="));
+        }
+        return cookies;
+      };
+
+      let name = getCookies().name;
+      if (!name) {
+        document.getElementById("login").innerHTML = `
+        <a href="./login.html"><button class="login-btn">Login</button></a>
+        <a href="./register.html"
+          ><button class="register-btn">Register</button></a
+        >
+        `;
+      } else {
+        document.getElementById("login").innerHTML = `
+        <button class="login-btn" id="logout">Hello, ${name}</button>
+        `;
+      }
       const API_URL = "./api/announcements";
       const options = {
         method: "GET",
@@ -84,6 +102,21 @@
         });
         listContainer.append(listFragment);
         list.append(listContainer);
+
+        document
+          .getElementById("logout")
+          .addEventListener("click", deleteAllCookies);
+        function deleteAllCookies() {
+          var cookies = document.cookie.split(";");
+
+          for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i];
+            var eqPos = cookie.indexOf("=");
+            var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+            document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+            window.location.href = "login.html";
+          }
+        }
       }
     </script>
   </body>

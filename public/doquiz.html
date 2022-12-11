@@ -29,19 +29,16 @@
         <a href="./allcourse.html">All courses</a>
         <a href="./mycourse.html">My Courses</a>
       </div>
-      <div class="header-btn">
-        <a href="./login.html"><button class="login-btn">Login</button></a>
-        <a href="./register.html"
-          ><button class="register-btn">Register</button></a
-        >
-      </div>
     </div>
 
     <div id="content" style="margin-left: 60px">
       <h2>Do Quiz:</h2>
-      <form id="Quiz">
-      </form>
+      <form id="Quiz"></form>
+    </div>
+    <div id="submitAns">
+      <button id="submit-btn">Submit</button>
 
+      <div id="score"></div>
     </div>
 
     <div class="footer">
@@ -55,8 +52,8 @@
       var API_URL = `/api/course/${course}/doquiz/${quiz}`;
 
       fetch(API_URL)
-      .then(res => res.json())
-      .then(res => renderQuestion(res.data))
+        .then((res) => res.json())
+        .then((res) => renderQuestion(res.data));
 
       function renderQuestion(data) {
         const list = document.getElementById("Quiz");
@@ -87,13 +84,14 @@
         data.forEach((item, index) => {
           try {
             console.log(item);
-            renderAnswer(item[1])
+            renderAnswer(item[1]);
           } catch (Error) {
             console.log(Error);
           }
         });
-
-        
+        e = document.getElementById("submit-btn");
+        e.myData = data;
+        e.addEventListener("click", handleClick);
       }
 
       function renderAnswer(answers) {
@@ -119,6 +117,44 @@
         list.append(listContainer);
       }
 
+      function handleClick(e) {
+        data = e.target.myData;
+        console.log(data);
+        var userAns = [];
+        data.forEach((item) => {
+          let answer = document.querySelector(
+            `input[type='radio'][name="${item[1][0].questionID}"]:checked`
+          );
+          if (answer === null) {
+            alert("Please select answer!" + item[1][0].questionID);
+          } else {
+            answer = answer.value;
+            let question = item[1][0].questionID;
+            userAns.push({
+              question_id: question,
+              answer_id: answer,
+            });
+          }
+        });
+        var formBody = new FormData();
+        formBody.append("answer", JSON.stringify(userAns));
+        fetch(API_URL, {
+          method: "POST",
+          body: formBody,
+        })
+          .then((res) => res.json())
+          .then((res) => renderScore(res.data));
+      }
+
+      function renderScore(data) {
+        document.getElementById("score").innerHTML = `
+                                                      <div class='score'>
+                                                        <h2 style="text-align: center">${data[0]}/${data[1]}</h2>
+                                                      </div>
+
+                                                      <a href='doquiz.html?course=${course}&quiz=${quiz}' id="doagain" class="btn"> Do quiz Again</a>
+                                                    `;
+      }
     </script>
   </body>
 </html>
