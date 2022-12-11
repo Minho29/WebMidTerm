@@ -16,6 +16,7 @@ const multer = require("multer");
 app.use(multer().none());
 const path = require("path");
 var bodyParser = require("body-parser");
+const { CLIENT_RENEG_LIMIT } = require("tls");
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
@@ -56,7 +57,7 @@ app.post("/api/register", (req, res, next) => {
   }
   var data = {
     name: req.body.name,
-    password:req.body.password,
+    password: req.body.password,
   };
   var sql = "INSERT INTO users (name, pass) VALUES (?,?)";
   var params = [data.name, data.password];
@@ -65,7 +66,7 @@ app.post("/api/register", (req, res, next) => {
       res.status(400).json({ error: err.message });
       return;
     }
-    res.send(true)
+    res.send(true);
   });
 });
 
@@ -87,7 +88,7 @@ app.post("/api/login", async function (req, res) {
         return;
       }
       let name = rows[0]["name"];
-      res.cookie("name", name, { expires: new Date(Date.now() + 900000) });
+      res.cookie("name", name, { expires: new Date(Date.now() + 90000000) });
       res.send(true);
     });
   }
@@ -162,7 +163,7 @@ app.post("/api/my/courses", async (req, res, next) => {
         }
         res.json({
           message: "success",
-        })
+        });
       });
     });
   } else {
@@ -171,10 +172,6 @@ app.post("/api/my/courses", async (req, res, next) => {
 });
 
 app.get("/api/course/:courseid/quizes", (req, res, next) => {
-  res.set({
-    "Content-Type": "application/json",
-    "Access-Control-Allow-Origin": "*",
-  });
   if (req.cookies.name) {
     let courseId = req.params.courseid;
     let sql = "select * from quizes where course_id = ?;";
@@ -198,21 +195,29 @@ app.get("/api/course/:courseid/quizes", (req, res, next) => {
 });
 
 app.get("/api/course/:courseid/doquiz/:quizid", (req, res, next) => {
-  res.set({
-    "Content-Type": "application/json",
-    "Access-Control-Allow-Origin": "*",
-  });
   if (req.cookies.name) {
     let quizId = req.params.quizid;
-    let sql = "select * from questions where quiz_id = ?";
+    let sql =
+      "select * from questions  INNER JOIN (select * from Question_answer INNER JOIN answers on answers.id = Question_answer.answerID) as Question  on questions.id = Question.questionID where quiz_id = ?";
     db.all(sql, quizId, (err, rows) => {
       if (err) {
         res.status(400).json({ error: err.message });
         return;
       }
+      const groupBy = (items, key) => items.reduce(
+        (result, item) => ({
+          ...result,
+          [item[key]]: [
+            ...(result[item[key]] || []),
+            item,
+          ],
+        }), 
+        {},
+      );
+
       res.json({
         message: "success",
-        data: rows,
+        data: Object.entries(groupBy(rows, "content")),
       });
     });
   } else {
@@ -221,10 +226,6 @@ app.get("/api/course/:courseid/doquiz/:quizid", (req, res, next) => {
 });
 
 app.post("/api/course/:courseid/doquiz/:quizid", (req, res, next) => {
-  res.set({
-    "Content-Type": "application/json",
-    "Access-Control-Allow-Origin": "*",
-  });
   if (req.cookies.name) {
     let data = req.body;
     let sql = "SELECT * FROM questions";

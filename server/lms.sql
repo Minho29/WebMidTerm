@@ -7,7 +7,7 @@ INSERT INTO users (id, name, pass)
 VALUES (1, 'user1', '123456');
 
 create table announcements (
-    id INTEGER primary key,
+    id INTEGER primary key AUTOINCREMENT,
     content text
 );
 INSERT INTO announcements (id, content)
@@ -17,7 +17,7 @@ VALUES
 (3, 'Admission results; Guide to university admission in the form of studying while working, 2nd batch in 2022');
 
 create table courses(
-    id integer primary key,
+    id integer primary key AUTOINCREMENT,
     name text,
     img_url text,
     discription text
@@ -44,7 +44,7 @@ VALUES
 (2, 1, 2, 'Learning');
 
 create table quizes(
-    id integer primary key,
+    id integer primary key AUTOINCREMENT,
     course_id integer,
     name text,
     foreign key (course_id) references courses(course_id)
@@ -61,8 +61,8 @@ VALUES
 (8, 4, 'Final-test');
 
 create table answers(
-    id integer primary key,
-    content text
+    id integer primary key AUTOINCREMENT,
+    answer_content text
 );
 INSERT INTO answers 
 VALUES
@@ -116,7 +116,7 @@ output is: your age in 20 years is:35'),
 (157, 'int myArray [] = {1, 3, 5};'),(158, 'int myArray [] [] = {1,2,3,4};'),(159, 'int [] myArray = (5, 4, 3);'),(160, 'int [] myArray = {“1”, “2”, “3”};');
 
 create table questions(
-    id integer primary key,
+    id integer primary key AUTOINCREMENT,
     content text,
     quiz_id integer,
     answer_id integer,

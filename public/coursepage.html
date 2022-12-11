@@ -53,7 +53,6 @@
         .then((response) => response.json())
         .then((res) => {
           if (res.messages === "success") {
-            console.log(res.data.filter((item) => item.id == value));
             renderCourses(res.data.filter((item) => item.id == value));
           } else {
             console.log(res.message);
@@ -66,16 +65,15 @@
           let li = document.createElement("li");
           li.innerHTML = `<div class="container">
                             <div class="row" style="border: 1px solid; border-radius: 15px">
-                              <div class="col-3">
+                              <div class="col-4">
                                 <img src="${img_url}" alt="img" style="width: 300px; object-fit: cover;" />
                               </div>
-                              <div class="col-7">
+                              <div class="col-8">
                                 <div class="container "  style="padding-top: 12px;">
                                   <h4>${name}</h4>
                                   <p>${discription}</p>
                                 </div>
                               </div>
-                              <div class="col-2" style="display: none">
                               </div>
                             </div>
                           </div>`;
@@ -106,7 +104,7 @@
           let li = document.createElement("li");
           li.innerHTML = `<div class="container">
                             <div class="row">
-                              <a href="./doquiz.html?quiz=${id}">
+                              <a href="./doquiz.html?course=${value}&quiz=${id}">
                                 <div class="quiz-btn">
                                   ${name}
                                 </div>
@@ -129,11 +127,6 @@
         });
         listContainer.append(listFragment);
         list.append(listContainer);
-        // quizes.forEach((item) => {
-        //   e = document.getElementById(`${item.id}`);
-        //   e.id = item.id;
-        //   e.addEventListener("click", handleClick);
-        // });
       }
     </script>
   </body>

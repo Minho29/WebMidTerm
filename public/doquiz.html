@@ -31,14 +31,94 @@
       </div>
       <div class="header-btn">
         <a href="./login.html"><button class="login-btn">Login</button></a>
-        <a href="./register.html"><button class="register-btn">Register</button></a>
+        <a href="./register.html"
+          ><button class="register-btn">Register</button></a
+        >
       </div>
     </div>
 
-    <div id="content"></div>
+    <div id="content" style="margin-left: 60px">
+      <h2>Do Quiz:</h2>
+      <form id="Quiz">
+      </form>
+
+    </div>
 
     <div class="footer">
       <h5>Developed by Tran Minh Hoang</h5>
     </div>
+
+    <script>
+      const params = new URLSearchParams(window.location.search);
+      let course = params.get("course");
+      let quiz = params.get("quiz");
+      var API_URL = `/api/course/${course}/doquiz/${quiz}`;
+
+      fetch(API_URL)
+      .then(res => res.json())
+      .then(res => renderQuestion(res.data))
+
+      function renderQuestion(data) {
+        const list = document.getElementById("Quiz");
+        function makeElem(quizesItem, quizesIndex) {
+          const question = quizesItem[0];
+          let li = document.createElement("li");
+          li.innerHTML = `<div class="question">
+                            <h3>${question}</h3>
+                            <div id="${quizesItem[1][0].questionID}"></div>
+                          </div>`;
+          return li;
+        }
+        const listContainer = document.createElement("ul");
+        listContainer.setAttribute("id", "listquestion");
+
+        const listFragment = document.createDocumentFragment();
+        data.forEach((item, index) => {
+          try {
+            const listElement = makeElem(item, index);
+            listFragment.append(listElement);
+          } catch (Error) {
+            console.log(Error);
+          }
+        });
+        listContainer.append(listFragment);
+        list.append(listContainer);
+
+        data.forEach((item, index) => {
+          try {
+            console.log(item);
+            renderAnswer(item[1])
+          } catch (Error) {
+            console.log(Error);
+          }
+        });
+
+        
+      }
+
+      function renderAnswer(answers) {
+        const list = document.getElementById(`${answers[0].questionID}`);
+        function makeElem(answerItem, answerIndex) {
+          const { answerID, answer_content } = answerItem;
+          let li = document.createElement("li");
+          li.innerHTML = `<input type="radio" name="${answers[0].questionID}" value="${answerID}" /> ${answer_content}`;
+          return li;
+        }
+        const listContainer = document.createElement("ul");
+
+        const listFragment = document.createDocumentFragment();
+        answers.forEach((item, index) => {
+          try {
+            const listElement = makeElem(item, index);
+            listFragment.append(listElement);
+          } catch (Error) {
+            console.log(Error);
+          }
+        });
+        listContainer.append(listFragment);
+        list.append(listContainer);
+      }
+
+    </script>
   </body>
 </html>
